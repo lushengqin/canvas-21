@@ -15,28 +15,44 @@
         canvas.width=document.documentElement.clientWidth
         canvas.height=document.documentElement.clientHeight
         var circle = new Path2D();
-        ctx.fillStyle = "orange";
-        ctx.beginPath();
-        ctx.arc(89, 102, 2, 0, Math.PI * 2, true);
+        ctx.fillStyle = "red";
+        // ctx.strokeStyle="none"
 
         let flag = false
-        canvas.onmousedown=(e)=>{
-            flag=true
-        }
         
         
-        canvas.onmousemove=(e)=>{
-            // ctx.arc(e.clientX, e.clientY, 10, 0, Math.PI * 2);
-            // ctx.fillRect (,10, 10);
-            if(flag === true){
+       let isTouchDevice = 'ontouchstart' in document.documentElement;
+        // console.log(isTouchDevice)
+        if(isTouchDevice){
+            // 如果它是手机端 那么执行下面的代码
+            canvas.ontouchmove=(e)=>{
+                let x = e.touches[0].clientX
+                let y = e.touches[0].clientY
                 ctx.beginPath();
-                ctx.arc(e.clientX, e.clientY, 10, 0, Math.PI*2, false);
+                ctx.arc(x, y, 10, 0, Math.PI*2);
                 ctx.fill();
+                // ctx.stroke() //边框
+            }
+           
+        }else{
+             //如果它不是手机端 那么执行以下
+            canvas.onmousedown=(e)=>{
+                flag=true
+            }
+           
+            canvas.onmousemove=(e)=>{
+                if(flag === true){
+                    ctx.beginPath();
+                    ctx.arc(e.clientX, e.clientY, 10, 0, Math.PI*2);
+                    ctx.fill();
+                    // ctx.stroke() //边框
+                }
+            }
+            canvas.onmouseup=(e)=>{
+                flag = false
             }
         }
-        canvas.onmouseup=(e)=>{
-            flag = false
-        }
+       
 
     </script>
 </body>
