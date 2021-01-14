@@ -16,41 +16,67 @@
         canvas.height=document.documentElement.clientHeight
         var circle = new Path2D();
         ctx.fillStyle = "red";
-        // ctx.strokeStyle="none"
+        ctx.strokeStyle="red"
+        ctx.lineWidth = 6;  //线是否加粗
+        ctx.lineCap = 'round'; //是否为圆角
+
+       
 
         let flag = false
+        let last 
+
+        // 把画线封装函数
+        function line(x1,x2,y1,y2){
+            ctx.beginPath();
+            ctx.moveTo(x1, x2);
+            ctx.lineTo(y1, y2);
+            ctx.stroke();
+        }
+        
+        
         
         
        let isTouchDevice = 'ontouchstart' in document.documentElement;
-        // console.log(isTouchDevice)
+        console.log(isTouchDevice)
         if(isTouchDevice){
             // 如果它是手机端 那么执行下面的代码
+            canvas.ontouchstart = (e)=>{
+                last=[e.clientX,e.clientY]
+            }
             canvas.ontouchmove=(e)=>{
                 let x = e.touches[0].clientX
                 let y = e.touches[0].clientY
-                ctx.beginPath();
-                ctx.arc(x, y, 10, 0, Math.PI*2);
-                ctx.fill();
+                // ctx.beginPath();
+                // ctx.arc(x, y, 10, 0, Math.PI*2);
+                // ctx.fill();
                 // ctx.stroke() //边框
+                // ctx.lineWidth = 15;
+                
+                line(last[0],last[1],x,y)
+                last=[x,y] 
             }
            
         }else{
              //如果它不是手机端 那么执行以下
             canvas.onmousedown=(e)=>{
                 flag=true
+                last = [e.clientX,e.clientY] //记住上一次的起点位置 在哪里按从哪里开始
             }
            
             canvas.onmousemove=(e)=>{
                 if(flag === true){
-                    ctx.beginPath();
-                    ctx.arc(e.clientX, e.clientY, 10, 0, Math.PI*2);
-                    ctx.fill();
+                    // ctx.beginPath();
+                    // ctx.arc(e.clientX, e.clientY, 10, 0, Math.PI*2);
+                    // ctx.fill();
                     // ctx.stroke() //边框
+                    // 以0为起点 获取它的宽高 那么现在的错误是它的起点错了 我们需要改变它的起点 或者记住它上一次起点的位置
+                    line(last[0] , last[1] ,e.clientX,e.clientY)
+                    last=[e.clientX,e.clientY]  //记住它的值之后每次完成之后需要给它重新赋值作为起点
                 }
             }
             canvas.onmouseup=(e)=>{
                 flag = false
-            }
+            } 
         }
        
 
